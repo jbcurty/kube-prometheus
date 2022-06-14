@@ -117,31 +117,45 @@ Apache License 2.0, see [LICENSE](https://github.com/prometheus-operator/kube-pr
 ## Installation
 
 # Etapa 1: clonar o projeto kube-prometheus
-git clone https://github.com/jbcurty/kube-prometheus.git
+```
+$ git clone https://github.com/jbcurty/kube-prometheus.git
+```
 # Navegue até o diretório kube-prometheus :
-cd kube-prometheus
+```
+$ cd kube-prometheus
+```
 
 # Etapa 2: criar namespace de monitoramento, CustomResourceDefinitions e pod de operador
-kubectl create -f manifests/setup 
+```
+$ kubectl create -f manifests/setup
+```
 
 //O namespace criado com CustomResourceDefinitions é denominado monitoring ://
 
 # Confirmar se o namespace foi craido e os pods:
-kubectl get ns monitoring
-kubectl get pods -n monitoring
+```
+$ kubectl get ns monitoring
+$ kubectl get pods -n monitoring
+```
 
 # Etapa 3: implantar a pilha de monitoramento do Prometheus no Kubernetes
-kubectl create -f manifests/
+```
+$ kubectl create -f manifests/
+```
 
+```
 //Verificar se os pods subiram//
-kubectl get pods -n monitoring
+$ kubectl get pods -n monitoring
 
 //Para listar todos os serviços criados//
-kubectl get svc -n monitoring
+$ kubectl get svc -n monitoring
+```
 
 # Etapa 4: acessar os painéis do Prometheus, Grafana e Alertmanager
-kubectl --namespace monitoring port-forward svc/grafana 3000
-kubectl --namespace monitoring port-forward svc/prometheus-k8s 9090
+```
+$ kubectl --namespace monitoring port-forward svc/grafana 3000
+$ kubectl --namespace monitoring port-forward svc/prometheus-k8s 9090
+```
 //Primeiro método: acessando a interface do usuário do Prometheus e os painéis do Grafana usando o proxy kubectl
 Uma maneira fácil de acessar os painéis do Prometheus, Grafana e Alertmanager é usar kubectl port-forward quando todos os serviços estiverem em execução://
 
@@ -149,11 +163,14 @@ Uma maneira fácil de acessar os painéis do Prometheus, Grafana e Alertmanager 
 //Segundo método: acessando a interface do usuário do Prometheus e o painel do Grafana usando o NodePort (somente para clusters privados)
 Para acessar os painéis do Prometheus, Grafana e Alertmanager usando um dos endereços IP de nós do trabalhador e uma porta, você deve editar os serviços e configurar o tipo para NodePort.//
 
-kubectl --namespace monitoring patch svc prometheus-k8s -p '{"spec": {"type": "NodePort"}}'
-kubectl --namespace monitoring patch svc alertmanager-main -p '{"spec": {"type": "NodePort"}}'
-kubectl --namespace monitoring patch svc grafana -p '{"spec": {"type": "NodePort"}}'
+```
+$ kubectl --namespace monitoring patch svc prometheus-k8s -p '{"spec": {"type": "NodePort"}}'
+$ kubectl --namespace monitoring patch svc alertmanager-main -p '{"spec": {"type": "NodePort"}}'
+$ kubectl --namespace monitoring patch svc grafana -p '{"spec": {"type": "NodePort"}}'
 
-kubectl -n monitoring get svc  | grep NodePort
-
+$ kubectl -n monitoring get svc  | grep NodePort
+```
 # Destruindo/derrubando a pilha de monitoramento do Prometheus
-kubectl delete --ignore-not-found=true -f manifests/ -f manifests/setup
+```
+$ kubectl delete --ignore-not-found=true -f manifests/ -f manifests/setup
+```
